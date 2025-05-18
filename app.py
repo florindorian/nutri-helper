@@ -1,14 +1,5 @@
 import streamlit as st
-from google import genai
-import os
-from dotenv import load_dotenv
-
-from streamlit_webrtc import webrtc_streamer, VideoTransformerBase
-import cv2
-from PIL import Image
-import io
 from google.genai import types
-
 
 from config_app import MODEL_NAME, client
 
@@ -30,7 +21,7 @@ def process_image(image_data, prompt):
             contents=[
                 types.Part.from_bytes(
                     data=image_data,
-                    mime_type='image/*',
+                    mime_type=image_data.type
                 ),
                 'Imagem com conteúdo textual'
             ]
@@ -47,7 +38,7 @@ def process_multiple_images(image_files, prompt):
             contents.append(
                 types.Part.from_bytes(
                     data=image_bytes,
-                    mime_type='image/*'
+                    mime_type=image_file.type
                 )
             )
         response = client.models.generate_content(
